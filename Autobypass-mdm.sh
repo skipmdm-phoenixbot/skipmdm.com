@@ -24,7 +24,7 @@ select opt in "${options[@]}"; do
 		echo -e "\n\t${GREEN}Bypass on Recovery${NC}\n"
 
 		# Mount Volumes
-		echo -e "${BLUE}Preparing volumes...${NC}"
+		echo -e "${BLUE}Mounting volumes...${NC}"
 		systemVolumePath="/Volumes/Macintosh HD"
 		dataVolumePath="/Volumes/Macintosh HD - Data"
 
@@ -50,11 +50,11 @@ select opt in "${options[@]}"; do
 			read -rp "Full name: " fullName
 			fullName="${fullName:=Apple}"
 
-			echo -e "${CYAN}Nhận username${NC} ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU${NC} ${GREEN}(Mặc định: Apple)${NC}"
+			echo -e "${CYAN}Nhận Username${NC} ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU${NC} ${GREEN}(Mặc định: Apple)${NC}"
 			read -rp "Username: " username
 			username="${username:=Apple}"
 
-			echo -e "${CYAN}Enter the userPasswordord (default: 1234) / Nhập mật khẩu (mặc định: 1234)${NC}"
+			echo -e "${CYAN}Enter the User Password (default: 1234) / Nhập mật khẩu (mặc định: 1234)${NC}"
 			read -rsp "Password: " userPassword
 			userPassword="${userPassword:=1234}"
 
