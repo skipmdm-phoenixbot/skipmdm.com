@@ -60,22 +60,6 @@ select opt in "${options[@]}"; do
 		echo -e "${CYAN}------ Exit Terminal , Reset Macbook and ENJOY ! ------${NC}"
 		break
 		;;
-	"Disable Notification (SIP)")
-		echo -e "${RED}Please Insert Your Password To Proceed${NC}"
-		sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
-		sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
-		sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
-		sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
-		break
-		;;
-	"Disable Notification (Recovery)")
-		rm -rf /Volumes/Macintosh\ HD/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
-		rm -rf /Volumes/Macintosh\ HD/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
-		touch /Volumes/Macintosh\ HD/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
-		touch /Volumes/Macintosh\ HD/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
-
-		break
-		;;
 	"Check MDM Enrollment")
 		echo ""
 		echo -e "${GRN}Check MDM Enrollment. Error is success${NC}"
