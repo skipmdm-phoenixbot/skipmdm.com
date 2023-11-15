@@ -16,7 +16,7 @@ echo -e "${CYAN}*-------------------*---------------------*${NC}"
 echo ""
 
 PS3='Please enter your choice: '
-options=("Autoypass on Recovery" "Check MDM Enrollment" "Reboot")
+options=("Autoypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
 
 select opt in "${options[@]}"; do
 	case $opt in
@@ -110,10 +110,14 @@ select opt in "${options[@]}"; do
 		fi
 		;;
 
-	"Exit")
-		echo "Rebooting..."
+	"Reboot")
+		echo -e "\n\t${BLU}Rebooting...${NC}\n"
 		reboot
-		break
+		;;
+
+	"Exit")
+		echo -e "\n\t${BLU}Exiting...${NC}\n"
+		exit
 		;;
 
 	*)
