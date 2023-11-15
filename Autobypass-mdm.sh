@@ -38,34 +38,40 @@ select opt in "${options[@]}"; do
 
 		echo -e "${GRN}Volume preparation completed${NC}\n"
 
-		# Create user
-		dscl_path='/Volumes/Data/private/var/db/dslocal/nodes/Default'
+		# Create User
+		echo -e "${BLU}Checking user existence${NC}"
+		dscl_path="$dataVolumePath/private/var/db/dslocal/nodes/Default"
 		localUserDirPath="/Local/Default/Users"
 		defaultUID="501"
-		echo -e "${GRN}Create a new user / Tạo User mới"
-		echo -e "${BLU}Press Enter to continue, Note: Leaving it blank will default to the automatic user / Nhấn Enter để tiếp tục, Lưu ý: có thể không điền sẽ tự động nhận User mặc định"
-		echo -e "Enter the username (Default: Apple) / Nhập tên User (Mặc định: Apple)"
-		read -rp "Full name: " fullName
-		fullName="${fullName:=Apple}"
+		if ! dscl -f "$dscl_path" localhost -list "$localUserDirPath" UniqueID | grep -q "\<$defaultUID\>"; then
+			echo -e "${CYAN}Create a new user / Tạo User mới${NC}"
+			echo -e "${CYAN}Press Enter to continue, Note: Leaving it blank will default to the automatic user / Nhấn Enter để tiếp tục, Lưu ý: có thể không điền sẽ tự động nhận User mặc định${NC}"
+			echo -e "${CYAN}Enter Full Name (Default: Apple) / Nhập tên User (Mặc định: Apple)${NC}"
+			read -rp "Full name: " fullName
+			fullName="${fullName:=Apple}"
 
-		echo -e "${BLUE}Nhận username ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU ${GRN} (Mặc định: Apple)"
-		read -rp "Username: " username
-		username="${username:=Apple}"
+			echo -e "${CYAN}Nhận username${NC} ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU${NC} ${GRN}(Mặc định: Apple)${NC}"
+			read -rp "Username: " username
+			username="${username:=Apple}"
 
-		echo -e "${BLUE}Enter the password (default: 1234) / Nhập mật khẩu (mặc định: 1234)"
-		read -rsp "Password: " userPassword
-		userPassword="${userPassword:=1234}"
+			echo -e "${CYAN}Enter the userPasswordord (default: 1234) / Nhập mật khẩu (mặc định: 1234)${NC}"
+			read -rsp "Password: " userPassword
+			userPassword="${userPassword:=1234}"
 
-		echo -e "${GREEN}Creating User / Đang tạo User"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" UserShell "/bin/zsh"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" RealName "$fullName"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" UniqueID "$defaultUID"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" PrimaryGroupID "20"
-		mkdir "$dataVolumePath/Users/$username"
-		dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" NFSHomeDirectory "/Users/$username"
-		dscl -f "$dscl_path" localhost -passwd "$localUserDirPath/$username" "$userPassword"
-		dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership "$username"
+			echo -e "\n${BLU}Creating User / Đang tạo User${NC}"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" UserShell "/bin/zsh"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" RealName "$fullName"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" UniqueID "$defaultUID"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" PrimaryGroupID "20"
+			mkdir "$dataVolumePath/Users/$username"
+			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" NFSHomeDirectory "/Users/$username"
+			dscl -f "$dscl_path" localhost -passwd "$localUserDirPath/$username" "$userPassword"
+			dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership "$username"
+			echo -e "${GRN}User created${NC}\n"
+		else
+			echo -e "${BLU}User already created${NC}\n"
+		fi
 
 		# Block MDM hosts
 		hostsPath="$systemVolumePath/etc/hosts"
