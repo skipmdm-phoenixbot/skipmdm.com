@@ -9,9 +9,9 @@ CYAN='\033[1;36m'
 NC='\033[0m'
 
 echo -e "${CYAN}*-------------------*---------------------*${NC}"
-echo -e "${YEL}* Check MDM - Skip MDM Auto for MacOS by *${NC}"
-echo -e "${RED}*             SKIPMDM.COM                *${NC}"
-echo -e "${RED}*            Phoenix Team                *${NC}"
+echo -e "${YEL}* Check MDM - Skip MDM Auto for MacOS by  *${NC}"
+echo -e "${RED}*             SKIPMDM.COM                 *${NC}"
+echo -e "${RED}*            Phoenix Team                 *${NC}"
 echo -e "${CYAN}*-------------------*---------------------*${NC}"
 echo ""
 
@@ -21,7 +21,7 @@ options=("Autoypass on Recovery" "Reboot")
 select opt in "${options[@]}"; do
 	case $opt in
 	"Autoypass on Recovery")
-		echo -e "${GRN}Bypass on Recovery"
+		echo -e "\n\t${GRN}Bypass on Recovery${NC}\n"
 
 		# Mount Volumes
 		echo -e "${BLU}Preparing volumes...${NC}"
@@ -82,16 +82,18 @@ select opt in "${options[@]}"; do
 		done
 		echo -e "${GRN}Successfully blocked host / Thành công chặn host${NC}\n"
 
-		# Remove config profile
+		# Remove config profiles
+		echo -e "${BLU}Remove config profiles${NC}"
 		configProfilesSettingsPath="$systemVolumePath/var/db/ConfigurationProfiles/Settings"
 		touch "$dataVolumePath/private/var/db/.AppleSetupDone"
 		rm -rf "$configProfilesSettingsPath/.cloudConfigHasActivationRecord"
 		rm -rf "$configProfilesSettingsPath/.cloudConfigRecordFound"
 		touch "$configProfilesSettingsPath/.cloudConfigProfileInstalled"
 		touch "$configProfilesSettingsPath/.cloudConfigRecordNotFound"
+		echo -e "${GRN}Config profiles removed${NC}\n"
 
-		echo -e "${CYAN}------ Autobypass SUCCESSFULLY / Autobypass HOÀN TẤT ------${NC}"
-		echo -e "${CYAN}------ Exit Terminal , Reset Macbook and ENJOY ! ------${NC}"
+		echo -e "${GRN}------ Autobypass SUCCESSFULLY / Autobypass HOÀN TẤT ------${NC}"
+		echo -e "${CYAN}------ Exit Terminal. Reboot Macbook and ENJOY ! ------${NC}"
 		break
 		;;
 
