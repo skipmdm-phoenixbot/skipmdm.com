@@ -1,15 +1,15 @@
 #!/bin/bash
 
 RED='\033[1;31m'
-GRN='\033[1;32m'
-BLU='\033[1;34m'
-YEL='\033[1;33m'
-PUR='\033[1;35m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+YELLOW='\033[1;33m'
+PURPLE='\033[1;35m'
 CYAN='\033[1;36m'
 NC='\033[0m'
 
 echo -e "${CYAN}*-------------------*---------------------*${NC}"
-echo -e "${YEL}* Check MDM - Skip MDM Auto for MacOS by  *${NC}"
+echo -e "${YELLOW}* Check MDM - Skip MDM Auto for MacOS by  *${NC}"
 echo -e "${RED}*             SKIPMDM.COM                 *${NC}"
 echo -e "${RED}*            Phoenix Team                 *${NC}"
 echo -e "${CYAN}*-------------------*---------------------*${NC}"
@@ -21,10 +21,10 @@ options=("Autoypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
 select opt in "${options[@]}"; do
 	case $opt in
 	"Autoypass on Recovery")
-		echo -e "\n\t${GRN}Bypass on Recovery${NC}\n"
+		echo -e "\n\t${GREEN}Bypass on Recovery${NC}\n"
 
 		# Mount Volumes
-		echo -e "${BLU}Preparing volumes...${NC}"
+		echo -e "${BLUE}Preparing volumes...${NC}"
 		systemVolumePath="/Volumes/Macintosh HD"
 		dataVolumePath="/Volumes/Macintosh HD - Data"
 
@@ -36,10 +36,10 @@ select opt in "${options[@]}"; do
 			diskutil mount "Macintosh HD - Data"
 		fi
 
-		echo -e "${GRN}Volume preparation completed${NC}\n"
+		echo -e "${GREEN}Volume preparation completed${NC}\n"
 
 		# Create User
-		echo -e "${BLU}Checking user existence${NC}"
+		echo -e "${BLUE}Checking user existence${NC}"
 		dscl_path="$dataVolumePath/private/var/db/dslocal/nodes/Default"
 		localUserDirPath="/Local/Default/Users"
 		defaultUID="501"
@@ -50,7 +50,7 @@ select opt in "${options[@]}"; do
 			read -rp "Full name: " fullName
 			fullName="${fullName:=Apple}"
 
-			echo -e "${CYAN}Nhận username${NC} ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU${NC} ${GRN}(Mặc định: Apple)${NC}"
+			echo -e "${CYAN}Nhận username${NC} ${RED}WRITE WITHOUT SPACES / VIẾT LIỀN KHÔNG DẤU${NC} ${GREEN}(Mặc định: Apple)${NC}"
 			read -rp "Username: " username
 			username="${username:=Apple}"
 
@@ -58,7 +58,7 @@ select opt in "${options[@]}"; do
 			read -rsp "Password: " userPassword
 			userPassword="${userPassword:=1234}"
 
-			echo -e "\n${BLU}Creating User / Đang tạo User${NC}"
+			echo -e "\n${BLUE}Creating User / Đang tạo User${NC}"
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username"
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" UserShell "/bin/zsh"
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" RealName "$fullName"
@@ -68,31 +68,31 @@ select opt in "${options[@]}"; do
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username" NFSHomeDirectory "/Users/$username"
 			dscl -f "$dscl_path" localhost -passwd "$localUserDirPath/$username" "$userPassword"
 			dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership "$username"
-			echo -e "${GRN}User created${NC}\n"
+			echo -e "${GREEN}User created${NC}\n"
 		else
-			echo -e "${BLU}User already created${NC}\n"
+			echo -e "${BLUE}User already created${NC}\n"
 		fi
 
 		# Block MDM hosts
-		echo -e "${BLU}Blocking MDM hosts...${NC}"
+		echo -e "${BLUE}Blocking MDM hosts...${NC}"
 		hostsPath="$systemVolumePath/etc/hosts"
 		blockedDomains=("deviceenrollment.apple.com" "mdmenrollment.apple.com" "iprofiles.apple.com")
 		for domain in "${blockedDomains[@]}"; do
 			echo "0.0.0.0 $domain" >>"$hostsPath"
 		done
-		echo -e "${GRN}Successfully blocked host / Thành công chặn host${NC}\n"
+		echo -e "${GREEN}Successfully blocked host / Thành công chặn host${NC}\n"
 
 		# Remove config profiles
-		echo -e "${BLU}Remove config profiles${NC}"
+		echo -e "${BLUE}Remove config profiles${NC}"
 		configProfilesSettingsPath="$systemVolumePath/var/db/ConfigurationProfiles/Settings"
 		touch "$dataVolumePath/private/var/db/.AppleSetupDone"
 		rm -rf "$configProfilesSettingsPath/.cloudConfigHasActivationRecord"
 		rm -rf "$configProfilesSettingsPath/.cloudConfigRecordFound"
 		touch "$configProfilesSettingsPath/.cloudConfigProfileInstalled"
 		touch "$configProfilesSettingsPath/.cloudConfigRecordNotFound"
-		echo -e "${GRN}Config profiles removed${NC}\n"
+		echo -e "${GREEN}Config profiles removed${NC}\n"
 
-		echo -e "${GRN}------ Autobypass SUCCESSFULLY / Autobypass HOÀN TẤT ------${NC}"
+		echo -e "${GREEN}------ Autobypass SUCCESSFULLY / Autobypass HOÀN TẤT ------${NC}"
 		echo -e "${CYAN}------ Exit Terminal. Reboot Macbook and ENJOY ! ------${NC}"
 		break
 		;;
@@ -104,19 +104,19 @@ select opt in "${options[@]}"; do
 		fi
 
 		if ! sudo profiles show -type enrollment >/dev/null 2>&1; then
-			echo -e "\n\t${GRN}Success${NC}\n"
+			echo -e "\n\t${GREEN}Success${NC}\n"
 		else
 			echo -e "\n\t${RED}Failure${NC}\n"
 		fi
 		;;
 
 	"Reboot")
-		echo -e "\n\t${BLU}Rebooting...${NC}\n"
+		echo -e "\n\t${BLUE}Rebooting...${NC}\n"
 		reboot
 		;;
 
 	"Exit")
-		echo -e "\n\t${BLU}Exiting...${NC}\n"
+		echo -e "\n\t${BLUE}Exiting...${NC}\n"
 		exit
 		;;
 
