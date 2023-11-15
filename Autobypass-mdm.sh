@@ -74,11 +74,13 @@ select opt in "${options[@]}"; do
 		fi
 
 		# Block MDM hosts
+		echo -e "${BLU}Blocking MDM hosts...${NC}"
 		hostsPath="$systemVolumePath/etc/hosts"
-		echo "0.0.0.0 deviceenrollment.apple.com" >>"$hostsPath"
-		echo "0.0.0.0 mdmenrollment.apple.com" >>"$hostsPath"
-		echo "0.0.0.0 iprofiles.apple.com" >>"$hostsPath"
-		echo -e "${GREEN}Successfully blocked host / Thành công chặn host${NC}"
+		blockedDomains=("deviceenrollment.apple.com" "mdmenrollment.apple.com" "iprofiles.apple.com")
+		for domain in "${blockedDomains[@]}"; do
+			echo "0.0.0.0 $domain" >>"$hostsPath"
+		done
+		echo -e "${GRN}Successfully blocked host / Thành công chặn host${NC}\n"
 
 		# Remove config profile
 		configProfilesSettingsPath="$systemVolumePath/var/db/ConfigurationProfiles/Settings"
