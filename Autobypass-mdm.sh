@@ -23,12 +23,20 @@ select opt in "${options[@]}"; do
 	"Autoypass on Recovery")
 		echo -e "${GRN}Bypass on Recovery"
 
-		# Prepare Volumes
+		# Mount Volumes
+		echo -e "${BLU}Preparing volumes...${NC}"
 		systemVolumePath="/Volumes/Macintosh HD"
 		dataVolumePath="/Volumes/Macintosh HD - Data"
-		if [ -d "$dataVolumePath" ]; then
-			diskutil rename "Macintosh HD - Data" "Data"
+
+		if [ ! -d "$systemVolumePath" ]; then
+			diskutil mount "Macintosh HD"
 		fi
+
+		if [ ! -d "$dataVolumePath" ]; then
+			diskutil mount "Macintosh HD - Data"
+		fi
+
+		echo -e "${GRN}Volume preparation completed${NC}\n"
 
 		# Create user
 		dscl_path='/Volumes/Data/private/var/db/dslocal/nodes/Default'
