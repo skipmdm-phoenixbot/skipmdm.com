@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Global constants
+readonly DEFAULT_SYSTEM_VOLUME="Macintosh HD"
+readonly DEFAULT_DATA_VOLUME="Macintosh HD - Data"
+
+# Text formating
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 BLUE='\033[1;34m'
@@ -7,6 +12,51 @@ YELLOW='\033[1;33m'
 PURPLE='\033[1;35m'
 CYAN='\033[1;36m'
 NC='\033[0m'
+
+# Checks if a volume with the given name exists
+checkVolumeExistence() {
+	local volumeLabel="$*"
+	diskutil info "$volumeLabel" >/dev/null 2>&1
+}
+
+# Returns the name of a volume with the given type
+getVolumeName() {
+	local volumeType="$1"
+
+	# Getting the APFS Container Disk Identifier
+	apfsContainer=$(diskutil list internal physical | grep 'Container' | awk -F'Container ' '{print $2}' | awk '{print $1}')
+	# Getting the Volume Information
+	volumeInfo=$(diskutil ap list "$apfsContainer" | grep -A 5 "($volumeType)")
+	# Extracting the Volume Name from the Volume Information
+	volumeNameLine=$(echo "$volumeInfo" | grep 'Name:')
+	# Removing unnecessary characters to get the clean Volume Name
+	volumeName=$(echo "$volumeNameLine" | cut -d':' -f2 | cut -d'(' -f1 | xargs)
+
+	echo "$volumeName"
+}
+
+# Defines the path to a volume with the given default name and volume type
+defineVolumePath() {
+	local defaultVolume=$1
+	local volumeType=$2
+
+	if checkVolumeExistence "$defaultVolume"; then
+		echo "/Volumes/$defaultVolume"
+	else
+		local volumeName
+		volumeName="$(getVolumeName "$volumeType")"
+		echo "/Volumes/$volumeName"
+	fi
+}
+
+# Mounts a volume at the given path
+mountVolume() {
+	local volumePath=$1
+
+	if [ ! -d "$volumePath" ]; then
+		diskutil mount "$volumePath"
+	fi
+}
 
 echo -e "${CYAN}*-------------------*---------------------*${NC}"
 echo -e "${YELLOW}* Check MDM - Skip MDM Auto for MacOS by  *${NC}"
@@ -25,16 +75,13 @@ select opt in "${options[@]}"; do
 
 		# Mount Volumes
 		echo -e "${BLUE}Mounting volumes...${NC}"
-		systemVolumePath="/Volumes/Macintosh HD"
-		dataVolumePath="/Volumes/Macintosh HD - Data"
+		# Mount System Volume
+		systemVolumePath=$(defineVolumePath "$DEFAULT_SYSTEM_VOLUME" "System")
+		mountVolume "$systemVolumePath"
 
-		if [ ! -d "$systemVolumePath" ]; then
-			diskutil mount "Macintosh HD"
-		fi
-
-		if [ ! -d "$dataVolumePath" ]; then
-			diskutil mount "Macintosh HD - Data"
-		fi
+		# Mount Data Volume
+		dataVolumePath=$(defineVolumePath "$DEFAULT_DATA_VOLUME" "Data")
+		mountVolume "$dataVolumePath"
 
 		echo -e "${GREEN}Volume preparation completed${NC}\n"
 
