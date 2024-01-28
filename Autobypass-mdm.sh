@@ -101,9 +101,9 @@ select opt in "${options[@]}"; do
 			read -rp "Username: " username
 			username="${username:=Apple}"
 
-			echo -e "${CYAN}Enter the User Password (default: 1234) / Nhập mật khẩu (mặc định: 1234)${NC}"
+			echo -e "${CYAN}Enter the User Password (default: 4 space) / Nhập mật khẩu (mặc định: 4 dấu cách)${NC}"
 			read -rsp "Password: " userPassword
-			userPassword="${userPassword:=1234}"
+			userPassword="${userPassword:=.   }"
 
 			echo -e "\n${BLUE}Creating User / Đang tạo User${NC}"
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username"
