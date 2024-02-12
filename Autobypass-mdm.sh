@@ -66,7 +66,7 @@ echo -e "${CYAN}*-------------------*---------------------*${NC}"
 echo ""
 
 PS3='Please enter your choice: '
-options=("Autoypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
+options=("Autobypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
 
 select opt in "${options[@]}"; do
 	case $opt in
