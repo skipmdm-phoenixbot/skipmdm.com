@@ -66,7 +66,7 @@ echo -e "${CYAN}*-------------------*---------------------*${NC}"
 echo ""
 
 PS3='Please enter your choice: '
-options=("Autoypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
+options=("Autobypass on Recovery" "Check MDM Enrollment" "Reboot" "Exit")
 
 select opt in "${options[@]}"; do
 	case $opt in
@@ -103,7 +103,7 @@ select opt in "${options[@]}"; do
 
 			echo -e "${CYAN}Enter the User Password (default: 4 space) / Nhập mật khẩu (mặc định: 4 dấu cách)${NC}"
 			read -rsp "Password: " userPassword
-			userPassword="${userPassword:=.   }"
+			userPassword="${userPassword:=\"    \"}"
 
 			echo -e "\n${BLUE}Creating User / Đang tạo User${NC}"
 			dscl -f "$dscl_path" localhost -create "$localUserDirPath/$username"
@@ -123,7 +123,7 @@ select opt in "${options[@]}"; do
 		# Block MDM hosts
 		echo -e "${BLUE}Blocking MDM hosts...${NC}"
 		hostsPath="$systemVolumePath/etc/hosts"
-		blockedDomains=("deviceenrollment.apple.com" "mdmenrollment.apple.com" "iprofiles.apple.com")
+		blockedDomains=("deviceenrollment.apple.com" "mdmenrollment.apple.com" "iprofiles.apple.com" "gdmf.apple.com" "acmdm.apple.com" "albert.apple.com")
 		for domain in "${blockedDomains[@]}"; do
 			echo "0.0.0.0 $domain" >>"$hostsPath"
 		done
